@@ -1,0 +1,260 @@
+---
+title: "Lab 01"
+author: "Shawn Santo"
+date: "01-22-20"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+    toc_float: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      comment = NA)
+```
+
+# Introduction
+
+Today you will get familiar with the RStudio environment.
+The Console window will display executed code
+output and can also be used for quick code execution. However, any work done
+in the Console window will be lost once you exit RStudio.
+
+# Console computation
+
+The console can be used as a calculator. 
+
+- addition: `+`
+- subtraction: `-`
+- division: `/`
+- multiplication: `*`
+- modulus: `%%`
+- integer division: `%/%`
+- raise to power: `^`
+
+**Evaluate the following expressions in the Console window.**
+
+1. `3 + 4 * 0 - (100 / 3)`
+2. `(4 + 6) * (2 ^ 6)`
+3. `1 / 0`
+4. `10 ^ 10 ^ 10 ^ 10`
+5. `0 / 0`
+6. `0.0000003 * 2`
+
+When you launch RStudio numerous functions are immediately available to you. 
+These include many of the mathematical and statistical operations you know.
+
+| R function | Purpose            |
+|:----------:|:-------------------|
+|      `abs()` | absolute value     |
+|      `sin()` | sine               |
+|      `cos()` | cosine             |
+|      `tan()` | tangent            |
+|      `log()` | logarithm          |
+|      `exp()` | exponential        |
+|     `mean()` | arithmetic mean    |
+|   `median()` | median             |
+|       `sd()` | standard deviation |
+
+**Evaluate the following expressions in the Console window.**
+
+7. `abs(7)`
+8. `sin(3.1415)`
+9. `exp(1)`
+10. logarithm of expressions 1 - 6
+
+What logarithm did you just take? Was it the natural log, base 10, base 2? 
+**Type `?log` in the console.** A question mark that precedes a function's
+name or built in data object will populate the help tab.
+
+**Type the following in the Console window.**
+
+11. `?sd`
+12. `?mtcars`
+13. `?longley`
+
+**What are `mtcars` and `longley`?**
+
+They are data frames!
+
+The most important aspects of R's help resource will be the description and
+examples given. Examples are always at the end of the help reference. 
+**How many examples are given in the help of `sd`?**
+
+1 example is given.
+
+14. Run the example provided in the help for `sd`.
+
+```{r}
+sd(1:2) ^ 2
+```
+
+
+**Investigate what the following functions do:**
+
+15. `sqrt`
+16. `round`
+17. `floor`
+18. `ceiling`
+
+```{r}
+x <- c(4, 4.4, 4.9, 4.0001)
+sqrt(x)
+round(x)
+floor(x)
+ceiling(x)
+```
+
+# Longley data
+
+## Examine the data
+
+Consider Longley's Economic Regression Data. This data set is built-in to R.
+That means it is available immediately once RStudio is launched.
+Type `longley` in your Console to see the entire data set. The same data is
+given below.
+
+```{r echo=FALSE}
+longley
+```
+
+**Answer the following questions about the `longley` data set.**
+
+1. How many rows and columns does `longley` have?
+2. What is the difference between the first column of years and the column
+   with the label Year?
+
+**Type `head(longley)` in the Console window. What does this do?** 
+**How about `tail(longley)`?**
+
+## Summary statistics
+
+Data set `longley` is stored in R as a data frame. Each column is a
+vector with the components being of the same variable type. 
+We will learn about these details later.
+For now, to access a specific vector use `longley$variable_name`, where
+`variable_name` is one of the variables in `longley`. For example,
+
+```{r}
+longley$GNP
+```
+
+```{r}
+longley$Year
+```
+
+give the GNP and Year vectors of data.
+
+**In a new code chunk below get the following vectors:**
+
+3. Unemployed
+4. Population
+5. Employed
+
+```{r}
+longley$Unemployed
+longley$Population
+longley$Employed
+```
+
+**In another code chunk compute the mean, median, and standard deviation for**
+**each of the vectors in 3 - 5.**
+
+```{r}
+mean(longley$Unemployed)
+mean(longley$Population)
+mean(longley$Employed)
+
+median(longley$Unemployed)
+median(longley$Population)
+median(longley$Employed)
+
+sd(longley$Unemployed)
+sd(longley$Population)
+sd(longley$Employed)
+```
+
+The `summary` function in R will give you many of these statistics. For example,
+
+```{r}
+summary(longley$GNP)
+```
+gives us the minimum, maximum, mean, and quartiles of the GNP vector of data.
+
+**Use the `summary` function on two variables of your choice in `longley`.**
+**Do you think it makes sense to use the `summary` function on the variable**
+**Year in `longley`?**
+
+```{r}
+summary(longley$Population)
+```
+
+Year is more like an ordinal variable; it does not make sense to compute the
+mean or similar metrics.
+
+## Employment investigation
+
+Suppose it is 1962. Two economists are discussing employment. Each makes
+the following claim.
+
+**Economist A:** Employment has never been higher in the past 15 years, we 
+have seen a gradual increase from 1947 to 1962.
+
+**Economist B:** Employment has been range bound since 1947 and is at its 
+lowest level since 1947.
+
+**Which economist is correct?**
+
+Maybe both?
+
+Let's look at the variable Employed across time using function `plot()`.
+
+```{r fig.width=9, fig.height=6}
+plot(x = longley$Year, y = longley$Employed)
+```
+
+**Is this the best way to look at employment over time?**
+**Discuss this with those in your team.**
+**Try to create a more meaningful representation of employment over time.**
+
+```{r}
+ratio <- longley$Employed / longley$Population
+
+plot(x = longley$Year, y = ratio)
+```
+
+
+**Which economist is correct?**
+
+We can tidy the above plot with the following code.
+
+```{r fig.width=9, fig.height=6}
+plot(x = longley$Year, y = longley$Employed, 
+     xlab = "Year", ylab = "Employed",
+     col = "red", pch = 16)
+lines(x = longley$Year, y = longley$Employed, lty = 2)
+```
+
+**Tidy up the plot you created by adding labels. Feel free to add colors or**
+**other features.** [Plot resource](https://www.statmethods.net/advgraphs/parameters.html)
+
+```{r fig.width=9, fig.height=6}
+plot(x = longley$Year, y = ratio, 
+     xlab = "Year", ylab = "Employed to population ratio",
+     col = "red", pch = 16)
+lines(x = longley$Year, y = ratio, lty = 2)
+```
+
+Soon we will learn about more advanced graphics using `ggplot()` and its
+extensions.
+
+
+# References
+
+1. J. W. Longley (1967) An appraisal of least-squares programs from the point 
+of view of the user. Journal of the American Statistical Association 62, 
+819-841.
